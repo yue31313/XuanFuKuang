@@ -1,0 +1,60 @@
+package com.demo.floatwindowdemo;
+
+import android.content.Context;
+import android.os.Vibrator;
+import android.view.LayoutInflater;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+public class RocketLauncher extends LinearLayout {
+
+	/**
+	 * 记录火箭发射台的宽度
+	 */
+	public static int width;
+
+	/**
+	 * 记录火箭发射台的高度
+	 */
+	public static int height;
+
+	/**
+	 * 火箭发射台的背景图片
+	 */
+	private ImageView launcherImg;
+
+	/**判断当前是否需要震动，若为true表示需要震动，若为false不需要*/
+	private boolean vibratorStatus = false;
+	/**震动实例对象*/
+	private Vibrator vib;
+	
+	public RocketLauncher(Context context) {
+		super(context);
+		LayoutInflater.from(context).inflate(R.layout.launcher, this);
+		launcherImg = (ImageView) findViewById(R.id.launcher_img);
+		width = launcherImg.getLayoutParams().width;
+		height = launcherImg.getLayoutParams().height;
+	}
+
+	/**
+	 * 更新火箭发射台的显示状态。如果小火箭被拖到火箭发射台上，就显示发射。
+	 */
+	public void updateLauncherStatus(boolean isReadyToLaunch) {
+		if (isReadyToLaunch) {
+			launcherImg.setImageResource(R.drawable.launcher_bg_fire);
+			if(!vibratorStatus){
+				openVibrator();
+			}
+		} else {
+			launcherImg.setImageResource(R.drawable.launcher_bg_hold);
+		}
+		vibratorStatus = isReadyToLaunch;
+	}
+
+	/**当小悬浮窗与发射台相接触，开启震动*/
+	private void openVibrator(){
+			vib = (Vibrator)getContext().getSystemService(getContext().VIBRATOR_SERVICE);
+			vib.vibrate(700);
+	}
+	
+}
